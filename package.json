@@ -19,5 +19,8 @@
   "bugs": {
     "url": "https://github.com/efredine/chatty-server/issues"
   },
-  "homepage": "https://github.com/efredine/chatty-server#readme"
+  "homepage": "https://github.com/efredine/chatty-server#readme",
+  "dependencies": {
+    "express": "4.14.0"
+  }
 }
