@@ -5,6 +5,11 @@ class ChatBar extends Component {
     super(props);
     this.handleChange = this.handleChange.bind(this);
     this.handleKeyPress = this.handleKeyPress.bind(this);
+    this.handleUserChange = this.handleUserChange.bind(this);
+  }
+
+  handleUserChange(event) {
+    this.props.onUserNameChange(event.target.value);
   }
 
   handleChange(event) {
@@ -12,8 +17,7 @@ class ChatBar extends Component {
   }
 
   handleKeyPress(event) {
-    console.log('Handling key press, props:', this.props);
-    if (event.which == 13) {
+    if (event.which === 13) {
       event.preventDefault();
       if(this.props.value.length > 0) {
         this.props.onSubmit();
@@ -22,10 +26,15 @@ class ChatBar extends Component {
   }
 
   render() {
-    console.log('Rendering ChatBar, props:', this.props);
     return (
       <footer>
-        <input id="username" type="text" placeholder="Your Name (Optional)" value={this.props.user.name}/>
+        <input
+          id="username"
+          type="text"
+          placeholder="Your Name (Optional)"
+          value={this.props.user.name}
+          onChange={this.handleUserChange}
+        />
         <input
           id="new-message"
           type="text"

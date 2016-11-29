@@ -28,6 +28,7 @@ class App extends Component {
     this.state = data;
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
+    this.handleUserNameChange = this.handleUserNameChange.bind(this);
   }
 
   render() {
@@ -35,13 +36,23 @@ class App extends Component {
       <div className="wrapper">
         <Nav/>
         <MessageList messages={this.state.messages}/>
-        <ChatBar user={this.state.currentUser} value={this.state.chatBarInput} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
+        <ChatBar
+          user={this.state.currentUser}
+          value={this.state.chatBarInput}
+          onChange={this.handleChange}
+          onSubmit={this.handleSubmit}
+          onUserNameChange={this.handleUserNameChange}
+        />
       </div>
     );
   }
 
   handleChange(value) {
     this.setState({chatBarInput: value});
+  }
+
+  handleUserNameChange(value) {
+    this.setState({currentUser: {name: value}});
   }
 
   handleSubmit() {
