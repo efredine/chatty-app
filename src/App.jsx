@@ -4,6 +4,7 @@ import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
 
 const data = {
+  chatBarInput: "",
   currentUser: {name: "Bob"}, // optional. if currentUser is not defined, it means the user is Anonymous
   messages: [
     {
@@ -19,10 +20,14 @@ const data = {
   ]
 };
 
+var index = 2;
+
 class App extends Component {
   constructor(props) {
     super(props);
     this.state = data;
+    this.handleChange = this.handleChange.bind(this);
+    this.handleSubmit = this.handleSubmit.bind(this);
   }
 
   render() {
@@ -30,9 +35,24 @@ class App extends Component {
       <div className="wrapper">
         <Nav/>
         <MessageList messages={this.state.messages}/>
-        <ChatBar user={this.state.currentUser}/>
+        <ChatBar user={this.state.currentUser} value={this.state.chatBarInput} onChange={this.handleChange} onSubmit={this.handleSubmit}/>
       </div>
     );
+  }
+
+  handleChange(value) {
+    this.setState({chatBarInput: value});
+  }
+
+  handleSubmit() {
+    this.setState((prevState, props) => ({
+      messages: prevState.messages.concat({
+        username: prevState.currentUser.name,
+        content: prevState.chatBarInput,
+        id: index++
+      }),
+      chatBarInput: ""
+    }));
   }
 }
 export default App;
