@@ -31,6 +31,10 @@ class App extends Component {
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
   }
 
+  componentDidMount() {
+    this.socket = new WebSocket("ws://localhost:5000/socketserver");
+  }
+
   render() {
     return (
       <div className="wrapper">
@@ -56,14 +60,22 @@ class App extends Component {
   }
 
   handleSubmit() {
-    this.setState((prevState, props) => ({
-      messages: prevState.messages.concat({
+
+    this.setState((prevState, props) => {
+      const newMessage = {
         username: prevState.currentUser.name,
         content: prevState.chatBarInput,
         id: index++
-      }),
-      chatBarInput: ""
-    }));
+      };
+      // send it out on the socket.
+      this.socket.send(JSON.stringify(newMessage));
+
+      // optimistically add it to the queue
+      return {
+        messages: prevState.messages.concat(newMessage),
+        chatBarInput: ""
+      }
+    });
   }
 }
 export default App;
