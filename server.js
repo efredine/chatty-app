@@ -2,6 +2,8 @@
 
 const express = require('express');
 const SocketServer = require('ws').Server;
+const uuidV4 = require('uuid/v4');
+
 
 const PORT = 5000;
 
@@ -22,6 +24,17 @@ wss.on('connection', (ws) => {
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
+
+    // parse it and assign a UUID
+    const incomingMessage = JSON.parse(message);
+    incomingMessage.id = uuidV4();
+
+    // Broadcast to all.
+    const messageAsString = JSON.stringify(incomingMessage);
+    wss.clients.forEach(function each(client) {
+      client.send(messageAsString);
+    });
+
   });
 
 
