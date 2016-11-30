@@ -26,10 +26,22 @@ const server = express()
 // Create the WebSockets server
 const wss = new SocketServer({ server });
 
+function safeSend(socket, messageAsString) {
+  try {
+    socket.send(messageAsString, (error) => {
+      if(error) {
+        console.log(error);
+      }
+    });
+  } catch(error){
+    console.log(error);
+  }
+}
+
 function broadcastMessage(message) {
   const messageAsString = JSON.stringify(message);
   wss.clients.forEach(function each(client) {
-    client.send(messageAsString);
+    safeSend(client, messageAsString);
   });
 }
 
@@ -75,7 +87,7 @@ wss.on('connection', (ws) => {
     wss.clients
     .filter(clientSocket => clientSocket !== ws)
     .forEach(function each(client) {
-      client.send(disconnectMessage);
+      safeSend(client, disconnectMessage);
     });
     console.log('Client disconnected', onlineCount);
   });
