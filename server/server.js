@@ -29,14 +29,13 @@ const wss = new SocketServer({ server });
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-  console.log('Client connected');
-
-  color = getColor();
+  const color = getColor();
+  console.log('Client connected, assigned color', color);
 
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
 
-    // parse it and assign a UUID
+    // parse it, assign a UUID and assign this user's color
     const incomingMessage = JSON.parse(message);
     incomingMessage.id = uuidV4();
     incomingMessage.color = color;
