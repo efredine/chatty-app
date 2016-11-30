@@ -8,12 +8,14 @@ class App extends Component {
     super(props);
     this.state = {
       chatBarInput: "",
+      userNameInput: "",
       currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
     this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
+    this.handleUserNameInput = this.handleUserNameInput.bind(this);
     this.handleIncomingMessage = this.handleIncomingMessage.bind(this);
   }
 
@@ -29,9 +31,11 @@ class App extends Component {
         <MessageList messages={this.state.messages}/>
         <ChatBar
           user={this.state.currentUser}
+          userNameInput={this.state.userNameInput}
           value={this.state.chatBarInput}
           onChange={this.handleChange}
           onSubmit={this.handleSubmit}
+          onUserNameInput={this.handleUserNameInput}
           onUserNameChange={this.handleUserNameChange}
         />
       </div>
@@ -53,6 +57,11 @@ class App extends Component {
 
   handleUserNameChange(value) {
     this.setState({currentUser: {name: value}});
+  }
+
+  handleUserNameInput(value) {
+    console.log("userNameInput", value);
+    this.setState({userNameInput: value});
   }
 
   handleSubmit() {
