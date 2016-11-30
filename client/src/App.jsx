@@ -61,7 +61,7 @@ class App extends Component {
             color: "black",
             id: newMessage.id,
             username: "System",
-            content: `One user ${newMessage.event}`
+            content: `A user has ${newMessage.event}`
           }
           return {
             onlineCount: newMessage.onlineCount,

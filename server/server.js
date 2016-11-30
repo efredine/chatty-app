@@ -40,7 +40,7 @@ function systemMessage(event, onlineCount) {
     event: event,
     onlineCount: onlineCount
   };
-  broadcastMessage(message);
+  return message;
 }
 
 // Set up a callback that will run when a client connects to the server
@@ -49,7 +49,8 @@ function systemMessage(event, onlineCount) {
 wss.on('connection', (ws) => {
   onlineCount += 1;
   const color = getColor();
-  systemMessage("connected", onlineCount);
+  broadcastMessage(systemMessage("connected", onlineCount));
+
   console.log('Client connected, assigned color', color);
 
   ws.on('message', function incoming(message) {
@@ -68,7 +69,14 @@ wss.on('connection', (ws) => {
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () =>{
     onlineCount -= 1;
-    systemMessage("disconnected", onlineCount);
+    const disconnectMessage = JSON.stringify(systemMessage("disconnected", onlineCount));
+
+    // send an updated to everyone else
+    wss.clients
+    .filter(clientSocket => clientSocket !== ws)
+    .forEach(function each(client) {
+      client.send(disconnectMessage);
+    });
     console.log('Client disconnected', onlineCount);
   });
 
