@@ -60,7 +60,6 @@ class App extends Component {
   }
 
   handleUserNameInput(value) {
-    console.log("userNameInput", value);
     this.setState({userNameInput: value});
   }
 
@@ -68,6 +67,7 @@ class App extends Component {
 
     this.setState((prevState, props) => {
       const newMessage = {
+        type: "message",
         username: prevState.currentUser.name,
         content: prevState.chatBarInput
       };

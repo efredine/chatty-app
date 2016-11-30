@@ -36,7 +36,6 @@ class ChatBar extends Component {
 
   // on blur, revert the user's name
   handleBlur(event) {
-    console.log('blur', this.props.user);
     this.props.onUserNameInput(this.props.user.name);
   }
 
