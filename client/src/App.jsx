@@ -7,6 +7,7 @@ class App extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      onlineCount: 0,
       chatBarInput: "",
       userNameInput: "",
       currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
@@ -27,7 +28,7 @@ class App extends Component {
   render() {
     return (
       <div className="wrapper">
-        <Nav/>
+        <Nav onlineCount={this.state.onlineCount}/>
         <MessageList messages={this.state.messages}/>
         <ChatBar
           user={this.state.currentUser}
@@ -44,11 +45,33 @@ class App extends Component {
 
   handleIncomingMessage(event) {
     const newMessage = JSON.parse(event.data);
-    this.setState((prevState, props) => {
-      return {
-        messages: prevState.messages.concat(newMessage)
-      };
-    });
+    switch(newMessage.type) {
+      case "Message":
+      case "Notification":
+        this.setState((prevState, props) => {
+          return {
+            messages: prevState.messages.concat(newMessage)
+          };
+        });
+        break;
+      case "Status":
+        this.setState((prevState, props) => {
+          const notificationMessage = {
+            type: "Notification",
+            color: "black",
+            id: newMessage.id,
+            username: "System",
+            content: `One user ${newMessage.event}`
+          }
+          return {
+            onlineCount: newMessage.onlineCount,
+            messages: prevState.messages.concat(notificationMessage)
+          };
+        });
+        break;
+      default:
+        console.log("Unrecognized message type: ", newMessage);
+    }
   }
 
   handleChange(value) {
