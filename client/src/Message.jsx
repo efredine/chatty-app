@@ -15,8 +15,11 @@ class Message extends Component {
   render() {
     const username = this.props.username || "Anonymous";
     const content = this.props.content;
+    const divStyle = {
+      color: this.props.color
+    }
     return (
-      <div className={getClassForMessageType(this.props.type)}>
+        <div className={getClassForMessageType(this.props.type)} style={divStyle}>
         <span className="username">{username}</span>
         <span className="content">{content}</span>
       </div>
