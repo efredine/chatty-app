@@ -7,6 +7,15 @@ const uuidV4 = require('uuid/v4');
 
 const PORT = 5000;
 
+const colors = ['Maroon', 'Green', 'Purple', 'Blue'];
+var colorIndex = 0;
+
+function getColor() {
+  let color = colors[colorIndex];
+  colorIndex = (colorIndex + 1) % colors.length;
+  return color;
+}
+
 // Create a new express server
 const server = express()
    // Make the express server serve static assets (html, javascript, css) from the /public folder
@@ -22,12 +31,15 @@ const wss = new SocketServer({ server });
 wss.on('connection', (ws) => {
   console.log('Client connected');
 
+  color = getColor();
+
   ws.on('message', function incoming(message) {
     console.log('received: %s', message);
 
     // parse it and assign a UUID
     const incomingMessage = JSON.parse(message);
     incomingMessage.id = uuidV4();
+    incomingMessage.color = color;
 
     // Broadcast to all.
     const messageAsString = JSON.stringify(incomingMessage);
