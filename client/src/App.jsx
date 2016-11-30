@@ -29,16 +29,18 @@ class App extends Component {
     return (
       <div className="wrapper">
         <Nav onlineCount={this.state.onlineCount}/>
-        <MessageList messages={this.state.messages}/>
-        <ChatBar
-          user={this.state.currentUser}
-          userNameInput={this.state.userNameInput}
-          value={this.state.chatBarInput}
-          onChange={this.handleChange}
-          onSubmit={this.handleSubmit}
-          onUserNameInput={this.handleUserNameInput}
-          onUserNameChange={this.handleUserNameChange}
-        />
+        <main>
+          <MessageList messages={this.state.messages}/>
+          <ChatBar
+            user={this.state.currentUser}
+            userNameInput={this.state.userNameInput}
+            value={this.state.chatBarInput}
+            onChange={this.handleChange}
+            onSubmit={this.handleSubmit}
+            onUserNameInput={this.handleUserNameInput}
+            onUserNameChange={this.handleUserNameChange}
+          />
+        </main>
       </div>
     );
   }
