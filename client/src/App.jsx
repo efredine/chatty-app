@@ -56,7 +56,20 @@ class App extends Component {
   }
 
   handleUserNameChange(value) {
-    this.setState({currentUser: {name: value}});
+    this.setState((prevState, props) => {
+      const previousName = prevState.currentUser.name.length === 0 ? "Anonymous" : prevState.currentUser.name;
+      const newMessage = {
+        type: "Notification",
+        username: value,
+        content: `was previously ${previousName}.`
+      };
+      this.socket.send(JSON.stringify(newMessage));
+      return {
+        currentUser: {
+          name: value
+        }
+      };
+    });
   }
 
   handleUserNameInput(value) {
@@ -67,7 +80,7 @@ class App extends Component {
 
     this.setState((prevState, props) => {
       const newMessage = {
-        type: "message",
+        type: "Message",
         username: prevState.currentUser.name,
         content: prevState.chatBarInput
       };
