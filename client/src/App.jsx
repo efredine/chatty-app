@@ -2,6 +2,14 @@ import React, {Component} from 'react';
 import Nav from './Nav.jsx';
 import MessageList from './MessageList.jsx';
 import ChatBar from './ChatBar.jsx';
+import Scroll  from 'react-scroll';
+
+var Link       = Scroll.Link;
+var Element    = Scroll.Element;
+var Events     = Scroll.Events;
+var scroll     = Scroll.animateScroll;
+var scrollSpy  = Scroll.scrollSpy;
+
 
 class App extends Component {
   constructor(props) {
@@ -23,6 +31,21 @@ class App extends Component {
   componentDidMount() {
     this.socket = new WebSocket("ws://localhost:5000/socketserver");
     this.socket.onmessage = this.handleIncomingMessage;
+    Events.scrollEvent.register('begin', function(to, element) {
+      console.log("begin", arguments);
+    });
+
+    Events.scrollEvent.register('end', function(to, element) {
+      console.log("end", arguments);
+    });
+
+    scrollSpy.update();
+
+  }
+
+  componentWillUnmount() {
+    Events.scrollEvent.remove('begin');
+    Events.scrollEvent.remove('end');
   }
 
   render() {
@@ -74,6 +97,9 @@ class App extends Component {
       default:
         console.log("Unrecognized message type: ", newMessage);
     }
+
+    // potentially annoying
+    scroll.scrollToBottom();
   }
 
   handleChange(value) {
@@ -89,6 +115,10 @@ class App extends Component {
         content: `was previously ${previousName}.`
       };
       this.socket.send(JSON.stringify(newMessage));
+
+      // scroll the div
+      scroll.scrollToBottom();
+
       return {
         currentUser: {
           name: value
@@ -111,6 +141,9 @@ class App extends Component {
       };
       // send it out on the socket.
       this.socket.send(JSON.stringify(newMessage));
+
+      // scroll the div
+      scroll.scrollToBottom();
 
       // clear out the chatBarInput
       return {
