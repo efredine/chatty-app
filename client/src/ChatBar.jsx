@@ -3,40 +3,46 @@ import React, {Component} from 'react';
 class ChatBar extends Component {
   constructor(props) {
     super(props);
-    this.handleChange = this.handleChange.bind(this);
-    this.handleUserChange = this.handleUserChange.bind(this);
-    this.handleKeyPress = this.handleKeyPress.bind(this);
-    this.handleUserKeyPress = this.handleUserKeyPress.bind(this);
+    this.state = {
+      userNameInput: "",
+      messageInput: ""
+    };
+
+    this.handleUserNameChange = this.handleChange.bind(this, "userNameInput");
+    this.handleMessageChange = this.handleChange.bind(this, "messageInput");
+    this.handleMessageKeyPress = this.handleMessageKeyPress.bind(this);
+    this.handleUserNameKeyPress = this.handleUserNameKeyPress.bind(this);
     this.handleBlur = this.handleBlur.bind(this);
   }
 
-  handleUserChange(event) {
-    this.props.onUserNameInput(event.target.value);
+  handleChange(field, event) {
+    const update = {};
+    update[field] = event.target.value;
+    this.setState(update);
   }
 
-  handleChange(event) {
-    this.props.onChange(event.target.value);
-  }
-
-  handleKeyPress(event) {
+  handleMessageKeyPress(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      if(this.props.value.length > 0) {
-        this.props.onSubmit();
-      }
+      this.setState((prevState, props) => {
+        if(prevState.messageInput.length > 0) {
+          props.onSubmit(prevState.messageInput);
+        }
+        return {messageInput: ""}
+      });
     }
   }
 
-  handleUserKeyPress(event) {
+  handleUserNameKeyPress(event) {
     if (event.key === "Enter") {
       event.preventDefault();
-      this.props.onUserNameChange(this.props.userNameInput);
+      this.props.onUserNameChange(this.state.userNameInput);
     }
   }
 
   // on blur, submit a new name if it's different from the old name.
   handleBlur(event) {
-    const proposedNewName = this.props.userNameInput;
+    const proposedNewName = this.state.userNameInput;
     if(proposedNewName !== this.props.user.name) {
       this.props.onUserNameChange(proposedNewName);
     }
@@ -50,9 +56,9 @@ class ChatBar extends Component {
             id="username"
             type="text"
             placeholder="Your Name (Optional)"
-            value={this.props.userNameInput}
-            onChange={this.handleUserChange}
-            onKeyPress={this.handleUserKeyPress}
+            value={this.state.userNameInput}
+            onChange={this.handleUserNameChange}
+            onKeyPress={this.handleUserNameKeyPress}
             onBlur={this.handleBlur}
           />
         </div><div className="messageContainer">
@@ -60,9 +66,9 @@ class ChatBar extends Component {
             id="new-message"
             type="text"
             placeholder="Type a message and hit ENTER"
-            value={this.props.value}
-            onChange={this.handleChange}
-            onKeyPress={this.handleKeyPress}
+            value={this.state.messageInput}
+            onChange={this.handleMessageChange}
+            onKeyPress={this.handleMessageKeyPress}
           />
         </div>
       </footer>

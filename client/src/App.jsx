@@ -21,10 +21,8 @@ class App extends Component {
       currentUser: {name: ""}, // optional. if currentUser is not defined, it means the user is Anonymous
       messages: []
     };
-    this.handleChange = this.handleChange.bind(this);
     this.handleSubmit = this.handleSubmit.bind(this);
     this.handleUserNameChange = this.handleUserNameChange.bind(this);
-    this.handleUserNameInput = this.handleUserNameInput.bind(this);
     this.handleIncomingMessage = this.handleIncomingMessage.bind(this);
   }
 
@@ -58,9 +56,7 @@ class App extends Component {
             user={this.state.currentUser}
             userNameInput={this.state.userNameInput}
             value={this.state.chatBarInput}
-            onChange={this.handleChange}
             onSubmit={this.handleSubmit}
-            onUserNameInput={this.handleUserNameInput}
             onUserNameChange={this.handleUserNameChange}
           />
         </main>
@@ -102,10 +98,6 @@ class App extends Component {
     scroll.scrollToBottom();
   }
 
-  handleChange(value) {
-    this.setState({chatBarInput: value});
-  }
-
   handleUserNameChange(value) {
     this.setState((prevState, props) => {
       const previousName = prevState.currentUser.name.length === 0 ? "Anonymous" : prevState.currentUser.name;
@@ -127,29 +119,20 @@ class App extends Component {
     });
   }
 
-  handleUserNameInput(value) {
-    this.setState({userNameInput: value});
-  }
+  handleSubmit(content) {
 
-  handleSubmit() {
+    const newMessage = {
+      type: "Message",
+      username: this.state.currentUser.name,
+      content: content
+    };
 
-    this.setState((prevState, props) => {
-      const newMessage = {
-        type: "Message",
-        username: prevState.currentUser.name,
-        content: prevState.chatBarInput
-      };
-      // send it out on the socket.
-      this.socket.send(JSON.stringify(newMessage));
+    // send it out on the socket.
+    this.socket.send(JSON.stringify(newMessage));
 
-      // scroll the div
-      scroll.scrollToBottom();
+    // scroll the div
+    scroll.scrollToBottom();
 
-      // clear out the chatBarInput
-      return {
-        chatBarInput: ""
-      }
-    });
   }
 }
 export default App;
