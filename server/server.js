@@ -8,7 +8,6 @@ const uuidV4 = require('uuid/v4');
 const PORT = 5000;
 
 const colors = ['Maroon', 'Green', 'Purple', 'Blue'];
-var onlineCount = 0;
 var colorIndex = 0;
 
 function getColor() {
@@ -59,9 +58,8 @@ function systemMessage(event, onlineCount) {
 // When a client connects they are assigned a socket, represented by
 // the ws parameter in the callback.
 wss.on('connection', (ws) => {
-  onlineCount += 1;
   const color = getColor();
-  broadcastMessage(systemMessage("connected", onlineCount));
+  broadcastMessage(systemMessage("connected", wss.clients.length));
 
   console.log('Client connected, assigned color', color);
 
@@ -80,8 +78,7 @@ wss.on('connection', (ws) => {
 
   // Set up a callback for when a client closes the socket. This usually means they closed their browser.
   ws.on('close', () =>{
-    onlineCount -= 1;
-    const disconnectMessage = JSON.stringify(systemMessage("disconnected", onlineCount));
+    const disconnectMessage = JSON.stringify(systemMessage("disconnected", wss.clients.length));
 
     // send an updated to everyone else
     wss.clients
@@ -89,7 +86,7 @@ wss.on('connection', (ws) => {
     .forEach(function each(client) {
       safeSend(client, disconnectMessage);
     });
-    console.log('Client disconnected', onlineCount);
+    console.log('Client disconnected', wss.clients.length);
   });
 
 });
