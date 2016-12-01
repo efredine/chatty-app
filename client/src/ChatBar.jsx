@@ -19,7 +19,7 @@ class ChatBar extends Component {
   }
 
   handleKeyPress(event) {
-    if (event.which === 13) {
+    if (event.key === "Enter") {
       event.preventDefault();
       if(this.props.value.length > 0) {
         this.props.onSubmit();
@@ -28,7 +28,7 @@ class ChatBar extends Component {
   }
 
   handleUserKeyPress(event) {
-    if (event.which === 13) {
+    if (event.key === "Enter") {
       event.preventDefault();
       this.props.onUserNameChange(this.props.userNameInput);
     }
