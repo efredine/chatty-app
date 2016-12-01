@@ -45,23 +45,26 @@ class ChatBar extends Component {
   render() {
     return (
       <footer>
-        <input
-          id="username"
-          type="text"
-          placeholder="Your Name (Optional)"
-          value={this.props.userNameInput}
-          onChange={this.handleUserChange}
-          onKeyPress={this.handleUserKeyPress}
-          onBlur={this.handleBlur}
-        />
-        <input
-          id="new-message"
-          type="text"
-          placeholder="Type a message and hit ENTER"
-          value={this.props.value}
-          onChange={this.handleChange}
-          onKeyPress={this.handleKeyPress}
-        />
+        <div className="userNameContainer">
+          <input
+            id="username"
+            type="text"
+            placeholder="Your Name (Optional)"
+            value={this.props.userNameInput}
+            onChange={this.handleUserChange}
+            onKeyPress={this.handleUserKeyPress}
+            onBlur={this.handleBlur}
+          />
+        </div><div className="messageContainer">
+          <input
+            id="new-message"
+            type="text"
+            placeholder="Type a message and hit ENTER"
+            value={this.props.value}
+            onChange={this.handleChange}
+            onKeyPress={this.handleKeyPress}
+          />
+        </div>
       </footer>
     );
   }
